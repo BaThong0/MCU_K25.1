@@ -1,0 +1,7 @@
+-c
+-I"/home/bathong/workspaceS32DS.3.6.3/Ex3/include"
+-x assembler-with-cpp
+-DSTART_FROM_FLASH
+-g3
+-mcpu=cortex-m4
+-specs=rdimon.specs
