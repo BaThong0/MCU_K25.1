@@ -1,4 +1,11 @@
+/**
+ * @file    driver_port.c
+ * @author  Vo Ba Thong
+ * @brief   driver for port based on CMSIS standard.
+ * @details PORT's driver based on CMSIS standard
+ */
 #include "driver_port.h"
+#include "../Core/Include/core_cm4.h"
 
 /* Lookup helpers */
 static inline uint32_t get_pcc_index(Driver_PortInstance port)
@@ -27,6 +34,7 @@ static inline PORT_Type* get_port_base (Driver_PortInstance port)
 	}
 }
 
+/* Enable clock function */
 void DRIVER_PORT_EnableClock(Driver_PortInstance port)
 {
 	uint32_t idx = get_pcc_index(port);
@@ -35,6 +43,7 @@ void DRIVER_PORT_EnableClock(Driver_PortInstance port)
 	IP_PCC->PCCn[idx] |= PCC_PCCn_CGC_MASK;
 }
 
+/* Configure pin multiplexing */
 void DRIVER_PORT_PinMux(Driver_PortInstance port, uint8_t pin, Driver_PortMux mux)
 {
 	PORT_Type* p = get_port_base(port);
@@ -50,8 +59,14 @@ void DRIVER_PORT_PullConfig(Driver_PortInstance port,
 	if(enable)
 	{
 		p->PCR[pin] |= PORT_PCR_PE_MASK;
-		if(pullup)	p->PCR[pin] |= PORT_PCR_PS_MASK;
-		else 		p->PCR[pin] &= ~PORT_PCR_PS_MASK;
+		if(pullup)
+		{
+			p->PCR[pin] |= PORT_PCR_PS_MASK;
+		}
+		else
+		{
+			p->PCR[pin] &= ~PORT_PCR_PS_MASK;
+		}
 	}
 	else
 	{
@@ -59,20 +74,25 @@ void DRIVER_PORT_PullConfig(Driver_PortInstance port,
 	}
 }
 
-/* === Interrupts === */
+/* === callbacks functions array === */
 static Driver_PortCallback callbacks[5] = {0};
 
+/* Register callback to port */
 void DRIVER_PORT_RegisterCallback(Driver_PortInstance port, Driver_PortCallback cb)
 {
 	callbacks[port] = cb;
 }
 
+/* Configure interrupt for pin */
 void DRIVER_PORT_PinInterruptConfig(Driver_PortInstance port,
 									uint8_t pin,
 									Driver_PortIrqConfig irqMode)
 {
 	PORT_Type* p = get_port_base(port);
 	p->PCR[pin] = (p->PCR[pin] & ~PORT_PCR_IRQC_MASK) | PORT_PCR_IRQC(irqMode);
+
+	/*Clear interrupt flag if there is a flag set before */
+	DRIVER_PORT_ClearInterruptFlag(port, pin);
 
 	/*Enabling corresponding NVIC interrupt */
 	IRQn_Type irq;
@@ -85,10 +105,12 @@ void DRIVER_PORT_PinInterruptConfig(Driver_PortInstance port,
 		case DRIVER_PORTE: irq = PORTE_IRQn; break;
 		default: return;
 	}
+	NVIC_ClearPendingIRQ(irq);
 	NVIC_SetPriority(irq, 2);
 	NVIC_EnableIRQ(irq);
 }
 
+/* Clear interrupt flag */
 void DRIVER_PORT_ClearInterruptFlag(Driver_PortInstance port, uint8_t pin)
 {
 	PORT_Type* p = get_port_base(port);
@@ -110,7 +132,7 @@ void PORTA_IRQHandler(void)
         {
         	if (flags & (1UL << i))
         		{
-        			callbacks[DRIVER_PORTA](i);
+        			callbacks[DRIVER_PORTA](i, DRIVER_PORT_IRQ_DMA_FAILING);
         		}
         }
     }
@@ -125,7 +147,7 @@ void PORTB_IRQHandler(void)
         {
             if (flags & (1UL << i))
             	{
-                    callbacks[DRIVER_PORTB](i);
+                    callbacks[DRIVER_PORTB](i, DRIVER_PORT_IRQ_DMA_FAILING);
                 }
         }
 
@@ -142,7 +164,7 @@ void PORTC_IRQHandler(void)
         {
         	 if (flags & (1UL << i))
         		 {
-        		 	 callbacks[DRIVER_PORTC](i);
+        		 	 callbacks[DRIVER_PORTC](i, DRIVER_PORT_IRQ_DMA_FAILING);
         		 }
         }
     }
@@ -158,7 +180,7 @@ void PORTD_IRQHandler(void)
         {
         	if (flags & (1UL << i))
         		{
-        			callbacks[DRIVER_PORTD](i);
+        			callbacks[DRIVER_PORTD](i, DRIVER_PORT_IRQ_DMA_FAILING);
         		}
         }
     }
@@ -174,7 +196,7 @@ void PORTE_IRQHandler(void)
         {
         	 if (flags & (1UL << i))
         		 {
-        		 	 callbacks[DRIVER_PORTE](i);
+        		 	 callbacks[DRIVER_PORTE](i, DRIVER_PORT_IRQ_DMA_FAILING);
         		 }
         }
     }

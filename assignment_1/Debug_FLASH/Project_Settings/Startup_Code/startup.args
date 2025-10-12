@@ -1,5 +1,6 @@
 -DCPU_S32K144HFT0VLLT
--I"/home/bathong/workspaceS32DS.3.6.3/assignment_1/include"
+-I"/home/bathong/workspaceS32DS.3.6.3/Ass1/include"
+-I"/home/bathong/workspaceS32DS.3.6.3/Ass1/Core"
 -O0
 -g3
 -Wall

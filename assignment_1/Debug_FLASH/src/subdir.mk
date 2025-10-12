@@ -6,20 +6,17 @@
 C_SRCS += \
 ../src/driver_gpio.c \
 ../src/driver_port.c \
-../src/main.c \
-../src/nvic_custom.c 
+../src/main.c 
 
 OBJS += \
 ./src/driver_gpio.o \
 ./src/driver_port.o \
-./src/main.o \
-./src/nvic_custom.o 
+./src/main.o 
 
 C_DEPS += \
 ./src/driver_gpio.d \
 ./src/driver_port.d \
-./src/main.d \
-./src/nvic_custom.d 
+./src/main.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

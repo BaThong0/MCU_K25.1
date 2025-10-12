@@ -7,7 +7,6 @@
 
 #include "driver_gpio.h"
 extern ARM_DRIVER_GPIO Driver_GPIO0;
-/* Button interrupt callback */
 
 int main(void) {
 	/* LED Setup */
@@ -32,9 +31,12 @@ int main(void) {
     Driver_GPIO0.SetDirection(BUTTON2, ARM_GPIO_INPUT);
     Driver_GPIO0.SetPullResistor(BUTTON2, ARM_GPIO_PULL_UP);
     Driver_GPIO0.SetEventTrigger(BUTTON2, ARM_GPIO_TRIGGER_FALLING_EDGE);
-    while(1) {
-    	//Nothing happens here, the interrupts handle everything
+
+    while(1)
+    {
+    	/* Do nothing */
     }
     return 0;
 }
 
+/* END OF FILE */

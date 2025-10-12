@@ -2,7 +2,7 @@
 #define DRIVER_PORT_H
 
 #include "S32K144.h"
-#include "nvic_custom.h"
+#include "../Core/Include/core_cm4.h"
 #include <stdint.h>
 /*
  * PORT Driver for S32K144 (CMSIS)
@@ -71,7 +71,7 @@ void DRIVER_PORT_PinInterruptConfig(Driver_PortInstance port,
 void DRIVER_PORT_ClearInterruptFlag(Driver_PortInstance port, uint8_t pin);
 
 /* Callback registration (user handler) */
-typedef void (*Driver_PortCallback)(uint8_t pin);
+typedef void (*Driver_PortCallback)(uint8_t pin, uint32_t event);
 void DRIVER_PORT_RegisterCallback(Driver_PortInstance port, Driver_PortCallback cb);
 
 #ifdef __cplusplus

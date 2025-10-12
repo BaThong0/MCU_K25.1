@@ -23,23 +23,23 @@ endif
 
 # Add inputs and outputs from these tool invocations to the build variables 
 SECONDARY_SIZE += \
-assignment_1.siz \
+Ass1.siz \
 
 
 # All Target
-all: assignment_1.elf secondary-outputs
+all: Ass1.elf secondary-outputs
 
 # Tool invocations
-assignment_1.elf: $(OBJS) /home/bathong/workspaceS32DS.3.6.3/assignment_1/Project_Settings/Linker_Files/S32K144_64_flash.ld $(USER_OBJS)
+Ass1.elf: $(OBJS) /home/bathong/workspaceS32DS.3.6.3/Ass1/Project_Settings/Linker_Files/S32K144_64_flash.ld $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Standard S32DS C Linker'
-	arm-none-eabi-gcc -o "assignment_1.elf" "@assignment_1.args"  $(USER_OBJS) $(LIBS)
+	arm-none-eabi-gcc -o "Ass1.elf" "@Ass1.args"  $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
-assignment_1.siz: assignment_1.elf
+Ass1.siz: Ass1.elf
 	@echo 'Invoking: Standard S32DS Print Size'
-	arm-none-eabi-size --format=berkeley assignment_1.elf
+	arm-none-eabi-size --format=berkeley Ass1.elf
 	@echo 'Finished building: $@'
 	@echo ' '
 
