@@ -1,0 +1,16 @@
+-T
+"/home/bathong/workspaceS32DS.3.6.3/Assignment2/Project_Settings/Linker_Files/S32K144_64_flash.ld"
+-Wl,-Map,"Assignment2.map"
+-Xlinker
+--gc-sections
+-n
+-mcpu=cortex-m4
+-specs=rdimon.specs
+"./Project_Settings/Startup_Code/startup.o"
+"./Project_Settings/Startup_Code/startup_S32K144.o"
+"./Project_Settings/Startup_Code/system_S32K144.o"
+"./src/driver_gpio.o"
+"./src/driver_port.o"
+"./src/driver_usart.o"
+"./src/main.o"
+"./src/nvic_custom.o"
